@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streamlit Basics: A Beginner's Guide</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --code-bg: #f4f7f9;
+            --code-text: #2d3436;
+            --accent-start: #0052D4; /* Deep Blue */
+            --accent-end: #4364F7;   /* Cyan-ish Blue */
+            --accent-light: #6FB1FC; /* Light Cyan */
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Typography & Gradients */
+        h1, h2, h3 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #0052D4, #4364F7, #6FB1FC);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            background: linear-gradient(90deg, #0052D4, #4364F7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #444;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        /* Callouts */
+        .callout {
+            background-color: #eef7ff;
+            border-left: 5px solid #0052D4;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .callout-title {
+            font-weight: bold;
+            color: #0052D4;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Steps */
+        .step {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #0052D4, #4364F7);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex-grow: 1;
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: #282c34; /* Dark theme for code contrast */
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            position: relative;
+            box-shadow: var(--shadow);
+            margin: 20px 0;
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+        }
+
+        /* Inline code */
+        p code, li code {
+            background-color: var(--code-bg);
+            color: #c7254e;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            border: 1px solid #e1e1e8;
+        }
+
+        /* Syntax Highlighting Mockup */
+        .kw { color: #c678dd; } /* Keywords: import, def, if */
+        .func { color: #61afef; } /* Functions */
+        .str { color: #98c379; } /* Strings */
+        .num { color: #d19a66; } /* Numbers */
+        .com { color: #5c6370; font-style: italic; } /* Comments */
+        .cls { color: #e5c07b; } /* Classes */
+
+        /* Copy Button */
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Tables for concepts */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: var(--shadow);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #777;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>Mastering Streamlit</h1>
+        <p style="text-align: center; font-size: 1.2rem; color: #666;">Build data web apps in pure Python. No HTML, CSS, or JavaScript required.</p>
+    </header>
+
+    <section id="intro">
+        <h2>1. What is Streamlit?</h2>
+        <p>Streamlit is an open-source Python library that makes it easy to create and share beautiful, custom web apps for machine learning and data science. In minutes you can build and deploy powerful data apps.</p>
+        <div class="callout">
+            <span class="callout-title">Why use it?</span>
+            Usually, building a web app requires knowing backend frameworks (Flask/Django) and frontend (HTML/CSS/JS). Streamlit handles the frontend for you. You write Python scripts, and Streamlit turns them into an interactive app.
+        </div>
+    </section>
+
+    <section id="prerequisites">
+        <h2>2. Prerequisites</h2>
+        <p>Before you begin, ensure you have the following:</p>
+        <ul>
+            <li><strong>Python 3.8 to 3.12</strong> installed on your system.</li>
+            <li><strong>PIP</strong> (Python Package Installer).</li>
+            <li>A code editor (VS Code, PyCharm, or Sublime Text).</li>
+        </ul>
+    </section>
+
+    <section id="setup">
+        <h2>3. Step-by-Step Setup</h2>
+        
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h3>Create a Project Folder</h3>
+                <p>Open your terminal or command prompt and create a new directory for your project.</p>
+                <p><code>mkdir my_streamlit_app</code><br><code>cd my_streamlit_app</code></p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h3>Install Streamlit</h3>
+                <p>Run the installation command:</p>
+                <p><code>pip install streamlit</code></p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h3>Create the Python File</h3>
+                <p>Create a file named <code>app.py</code> in your folder.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <h3>Run the App</h3>
+                <p>In your terminal, run:</p>
+                <p><code>streamlit run app.py</code></p>
+                <p>This will open a new tab in your default web browser (usually at http://localhost:8501).</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="hello-world">
+        <h2>4. Hello World Example</h2>
+        <p>Let's write your first app. Open <code>app.py</code> and paste the following:</p>
+
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="kw">import</span> streamlit <span class="kw">as</span> st
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="com"># 1. Title and Text</span>
+st.title(<span class="str">"Hello, Streamlit! 🎈"</span>)
+st.write(<span class="str">"This is my first app. I can write text, data, and charts easily."</span>)
+
+<span class="com"># 2. A Simple Button</span>
+<span class="kw">if</span> st.button(<span class="str">"Click Me"</span>):
+    st.write(<span class="str">"You clicked the button!"</span>)</code></pre>
+
+        <div class="callout">
+            <span class="callout-title">The "Always Rerun" Workflow</span>
+            Whenever you save your <code>app.py</code> file, the Streamlit page in your browser will show a "Rerun" button (or you can set it to "Always Rerun"). Streamlit reruns your <strong>entire python script from top to bottom</strong> every time a user interacts with a widget.
+        </div>
+    </section>
+
+    <section id="concepts">
+        <h2>5. Core Streamlit Concepts</h2>
+        
+        <h3>Displaying Text</h3>
+        <table>
+            <tr>
+                <th>Function</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><code>st.title("...")</code></td>
+                <td>Main app title (h1 equivalent).</td>
+            </tr>
+            <tr>
+                <td><code>st.header("...")</code></td>
+                <td>Section header (h2 equivalent).</td>
+            </tr>
+            <tr>
+                <td><code>st.markdown("...")</code></td>
+                <td>Render Markdown (bold, italics, links).</td>
+            </tr>
+            <tr>
+                <td><code>st.write("...")</code></td>
+                <td>Swiss Army knife. Can print text, dataframes, errors, etc.</td>
+            </tr>
+        </table>
+
+        <h3>Input Widgets</h3>
+        <table>
+            <tr>
+                <th>Function</th>
+                <th>Return Value</th>
+            </tr>
+            <tr>
+                <td><code>name = st.text_input("Label")</code></td>
+                <td>Returns a string entered by user.</td>
+            </tr>
+            <tr>
+                <td><code>age = st.slider("Age", 0, 100)</code></td>
+                <td>Returns an integer/float selected.</td>
+            </tr>
+            <tr>
+                <td><code>choice = st.selectbox("Pick", ["A", "B"])</code></td>
+                <td>Returns the selected item.</td>
+            </tr>
+            <tr>
+                <td><code>file = st.file_uploader("Upload CSV")</code></td>
+                <td>Returns a file buffer object.</td>
+            </tr>
+        </table>
+
+        <h3>Layout & Organization</h3>
+        <p>Streamlit renders linearly by default, but you can organize content.</p>
+        <ul>
+            <li><strong>Sidebar:</strong> <code>st.sidebar.title("Menu")</code> puts items on the left.</li>
+            <li><strong>Columns:</strong> <code>col1, col2 = st.columns(2)</code> splits the screen width.</li>
+            <li><strong>Tabs:</strong> <code>tab1, tab2 = st.tabs(["Data", "Chart"])</code>.</li>
+        </ul>
+
+        <h3>Session State (Memory)</h3>
+        <p>Because Streamlit reruns the whole script on every interaction, variables reset by default. To keep data (like a chat history or counter) across reruns, use <code>st.session_state</code>.</p>
+        <p>Think of it like a persistent Python dictionary.</p>
+    </section>
+
+    <section id="full-example">
+        <h2>6. Complete Interactive Mini-App</h2>
+        <p>Here is a complete example that uses Layouts, Logic, Inputs, and Charts. Copy this into <code>app.py</code> to see it in action.</p>
+
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code><span class="kw">import</span> streamlit <span class="kw">as</span> st
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="com"># --- Page Config ---</span>
+st.set_page_config(page_title=<span class="str">"Data Explorer"</span>, page_icon=<span class="str">"📊"</span>)
+
+<span class="com"># --- Sidebar for Inputs ---</span>
+st.sidebar.header(<span class="str">"User Controls"</span>)
+user_name = st.sidebar.text_input(<span class="str">"Enter your name"</span>, <span class="str">"Guest"</span>)
+row_count = st.sidebar.slider(<span class="str">"Rows to generate"</span>, 10, 100, 50)
+
+<span class="com"># --- Main Page ---</span>
+st.title(<span class="str">"Simple Data Dashboard"</span>)
+st.write(f<span class="str">"Welcome, **{user_name}**! Here is your random data."</span>)
+
+<span class="com"># --- Logic: Generate Data ---</span>
+<span class="com"># simple logic to create a random dataframe</span>
+df = pd.DataFrame(
+    np.random.randn(row_count, 3),
+    columns=[<span class="str">'A'</span>, <span class="str">'B'</span>, <span class="str">'C'</span>]
+)
+
+<span class="com"># --- Layout: 2 Columns ---</span>
+col1, col2 = st.columns(2)
+
+<span class="kw">with</span> col1:
+    st.subheader(<span class="str">"Table View"</span>)
+    <span class="com"># Display data as an interactive table</span>
+    st.dataframe(df)
+
+<span class="kw">with</span> col2:
+    st.subheader(<span class="str">"Chart View"</span>)
+    <span class="com"># Simple line chart</span>
+    st.line_chart(df)
+
+<span class="com"># --- Conditional Logic ---</span>
+<span class="kw">if</span> st.checkbox(<span class="str">"Show Summary Statistics"</span>):
+    st.write(df.describe())
+
+<span class="com"># --- Session State Example ---</span>
+st.divider()
+st.subheader(<span class="str">"Session State Counter"</span>)
+
+<span class="com"># Initialize state if it doesn't exist</span>
+<span class="kw">if</span> <span class="str">'count'</span> <span class="kw">not in</span> st.session_state:
+    st.session_state.count = 0
+
+<span class="kw">def</span> <span class="func">increment_counter</span>():
+    st.session_state.count += 1
+
+st.button(<span class="str">"Click to count (keeps memory)"</span>, on_click=increment_counter)
+st.write(f<span class="str">"Current Count: {st.session_state.count}"</span>)</code></pre>
+    </section>
+
+    <section id="mistakes">
+        <h2>7. Common Mistakes & Fixes</h2>
+        
+        <div class="callout" style="border-left-color: #ff4757; background-color: #fff1f2;">
+            <span class="callout-title" style="color: #ff4757;">1. Buttons Inside Buttons</span>
+            <p><strong>Mistake:</strong> Nesting <code>if st.button('A'): if st.button('B'): ...</code><br>
+            <strong>Why:</strong> When you click B, the script reruns. Button A is no longer "clicked" (it resets to False), so the code inside A never runs, and B is never seen.</p>
+        </div>
+
+        <div class="callout" style="border-left-color: #ff4757; background-color: #fff1f2;">
+            <span class="callout-title" style="color: #ff4757;">2. Modifying Lists/Dicts directly</span>
+            <p><strong>Mistake:</strong> <code>my_list = []</code> at the top of the script.<br>
+            <strong>Why:</strong> Every time you click a button, the script starts at the top and <code>my_list</code> becomes empty again. Use <code>st.session_state.my_list</code> instead.</p>
+        </div>
+
+        <div class="callout" style="border-left-color: #ff4757; background-color: #fff1f2;">
+            <span class="callout-title" style="color: #ff4757;">3. Key Errors</span>
+            <p><strong>Mistake:</strong> Creating two widgets with the same logic but no explicit key.<br>
+            <strong>Fix:</strong> Always provide a unique key: <code>st.button("Ok", key="btn1")</code>.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>You are now ready to build! Visit <a href="https://docs.streamlit.io" target="_blank">docs.streamlit.io</a> for advanced tutorials.</p>
+    </footer>
+
+</div>
+
+<script>
+    function copyCode(button) {
+        const pre = button.parentElement;
+        const code = pre.querySelector('code');
+        const text = code.innerText;
+
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = button.innerText;
+            button.innerText = 'Copied!';
+            setTimeout(() => {
+                button.innerText = originalText;
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            button.innerText = 'Error';
+        });
+    }
+</script>
+
+</body>
+</html>
